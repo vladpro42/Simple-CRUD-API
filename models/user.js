@@ -4,33 +4,35 @@ class User {
     users = [{ id: crypto.randomUUID(), username: 'vlad', age: 24, hobbies: ['gym', 'programming'] }]
 
     getById(id) {
-        const [users] = this.users.filter(user => user.id === id)
-        return users
+        const [user] = this.users.filter(user => user.id === id)
+        return user
     }
 
     getAll() { return this.users }
 
-    createTest(user) {
+    create(user) {
         this.users.push(user)
     }
 
     delete(id) {
-        let isDeleted = false
-        this.users.filter(user => {
-            if (user.id === id) {
-                isDeleted = true
-                return true;
-            }
-        })
-        return isDeleted
+        const initialLength = this.users.length;
+        this.users = this.users.filter(user => user.id !== id);
+        const isDeleted = this.users.length < initialLength;
+        return isDeleted;
     }
 
     update(id, userData) {
-        this.users.map(user => {
+        let isUpdated = false;
+
+        this.users = this.users.map(user => {
             if (user.id === id) {
-                user = userData
+                isUpdated = true;
+                return { ...user, ...userData, id: id };
             }
-        })
+            return user;
+        });
+
+        return isUpdated;
     }
 }
 
